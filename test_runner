@@ -1,0 +1,63 @@
+# $1: "run" or "test"
+# $2: source filename
+
+if [[ ( ! $1 == "run" ) && ( ! $1 == "test" ) ]]; then
+  echo "1st arg must be 'run' or 'test'"
+  exit
+fi
+
+if [[ $2 == "" ]]; then
+  echo "2st arg must be source filename"
+  exit
+fi
+
+
+name=`echo $2 | cut -d'.' -f 1`
+suffix=`echo $2 | cut -d'.' -f 2`
+runcmd=""
+
+if [[ $suffix == "cpp" ]]; then
+  g++ -Wl,--stack,100000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+  runcmd="./$name"
+elif [[ $suffix == "java" ]]; then
+  # java class name must be the same as the file name
+  runcmd="java $name"
+elif [[ $suffix == "py" ]]; then
+  runcmd="python $2"
+else
+  echo "unknown source type: .$suffix"
+  exit
+fi
+
+if [ ! -d "input" ]; then
+  echo "No input folder found"
+  exit 
+elif [ ! "$(ls -A "input")" ]; then
+  echo "Empty input folder"
+  exit
+fi
+if [ ! -d "output" ]; then
+  mkdir output
+fi
+if [[ ( ! -d "answer" ) && "$1" == "test" ]]; then
+  mkdir answer
+fi
+
+for i in input/*; do
+	echo -n -e "$i:\t"
+	if [[ "$1" == "test" ]]; then
+	  # test the src against all cases
+  	`$runcmd < $i > ${i//input/answer}`
+  	comp=`diff -q --strip-trailing-cr ${i//input/output} ${i//input/answer}`
+  	if [[ "$comp" == "" ]]; then
+  		echo "OK"
+  	else
+  		diff -y --strip-trailing-cr ${i/in/ok} ${i/in/out}
+  		echo "INCORRECT"
+  	fi
+	else
+	  # generate AC outputs for all cases
+	  `$runcmd < $i > ${i//input/output}`
+	  echo "DONE"
+	fi
+done

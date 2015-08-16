@@ -1,0 +1,16 @@
+group = MinusOne
+  func = xMinusOne
+  num = 2
+  param
+    x = 3
+    x = 5
+end
+
+group = TwoRandom
+  func = twoRandomIntegers
+  num = 5
+  param
+    l = 1, r = 5
+    l = 10, r = 20
+    ...
+end
