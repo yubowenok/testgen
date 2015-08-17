@@ -47,17 +47,20 @@ for i in input/*; do
 	echo -n -e "$i:\t"
 	if [[ "$1" == "test" ]]; then
 	  # test the src against all cases
-  	`$runcmd < $i > ${i//input/answer}`
-  	comp=`diff -q --strip-trailing-cr ${i//input/output} ${i//input/answer}`
+  	$runcmd < $i > ${i//input/answer}
+  	outfile=${i//input/output}
+  	ansfile=${i//input/answer}
+  	diffcmd="diff -q --strip-trailing-cr $outfile $ansfile"
+  	comp=`eval $diffcmd`
   	if [[ "$comp" == "" ]]; then
   		echo "OK"
   	else
-  		diff -y --strip-trailing-cr ${i/in/ok} ${i/in/out}
+  		diff -y --strip-trailing-cr $outfile $ansfile
   		echo "INCORRECT"
   	fi
 	else
 	  # generate AC outputs for all cases
-	  `$runcmd < $i > ${i//input/output}`
+	  $runcmd < $i > ${i//input/output}
 	  echo "DONE"
 	fi
 done
