@@ -1,4 +1,7 @@
-### Test generator for algorithm problems
+## Test generator for algorithm problems
+
+
+### Test generator and runner
 
 Here we show how to create test cases for a simple problem "A + B" that asks for the sum of two integers:
 
@@ -83,3 +86,24 @@ The files are named _input00.txt_, _input01.txt_, and so on.
 Source code will be compiled based on suffix file types. \*.cpp, \*.java and \*.py files are supported.
 The correct outputs will be at _output/\*_.
 For testing user's answers (to be compared against _output/\*_) will be at _answer/\*_.
+
+### Test Packer
+
+Test packer is a python script that combines the test cases in the input folder into files with multiple test cases.
+Each new case file will include an integer of the number of the cases inside this case file at its beginning.
+It accepts one specification file (groups.spec) of the following format
+```
+n  # number of files
+n1 # number of cases in the 1st file
+n2 # number of cases in the 2nd file
+n3 # number of cases in the 3rd file
+...
+```
+Usage:
+```bash
+python test_packer.py < groups.spec
+```
+The first n1 cases (numbered by input00.txt, input01.txt ...) will be written to the 1st input file (input00.txt),
+the first n2 cases will be written to the 2nd input file (input01.txt), and so on.
+Please make sure that the input folder contains sufficient number of cases.
+If there are unused cases in the input folder, they will be deleted.
