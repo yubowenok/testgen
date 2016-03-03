@@ -14,9 +14,9 @@ def getNextTmpFilename():
   global file_counter
   res = ""
   if file_counter < 10:
+    res = "input00" + str(file_counter) + ".tmp"
+  elif file_counter < 100:
     res = "input0" + str(file_counter) + ".tmp"
-  else:
-    res = "input" + str(file_counter) + ".tmp"
   file_counter = file_counter + 1
   return res
 

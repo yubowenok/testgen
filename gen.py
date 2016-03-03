@@ -6,6 +6,8 @@ curCase = None
 
 def fmtCaseNum(x):
   if x < 10:
+    return "00" + str(x)
+  elif x < 100:
     return "0" + str(x)
   return str(x)
 

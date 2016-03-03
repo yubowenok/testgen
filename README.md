@@ -29,7 +29,7 @@ gen.init()
 
 gen.manualCases("input_manual") # copy from the manual cases in input_manual
 rules = gen.parseRule("aplusb.genrule") # parse the test generator rules defined in aplusb.genrule
-gen.programCases(rules, aplusb_input) # generate tests via program, using the rules defined in aplub.gen
+gen.programCases(rules, aplusb_input) # generate tests via program, using the rules defined in aplub.genrule
 ```
 * _aplusb\_input.py_ shall define several ways to generate tests programmatically, like:
 ```python
@@ -76,7 +76,7 @@ In the above example, the last 4 cases for group "TwoRandom" all use parameters 
 python aplusb_gen.py
 ```
 This shall create a folder named _input_ and put all cases there, one case per file.
-The files are named _input00.txt_, _input01.txt_, and so on.
+The files are named _input000.txt_, _input001.txt_, and so on.
 
 * Write a solver for the problem, say _sol.cpp_
 * Use _test\_runner_ to generate the correct outputs for all the test cases, or test a solution
@@ -103,7 +103,10 @@ Usage:
 ```bash
 python test_packer.py < groups.spec
 ```
-The first n1 cases (numbered by input00.txt, input01.txt ...) will be written to the 1st input file (input00.txt),
-the first n2 cases will be written to the 2nd input file (input01.txt), and so on.
+The first n1 cases (numbered by input000.txt, input001.txt ...) will be written to the 1st input file (input000.txt),
+the first n2 cases will be written to the 2nd input file (input001.txt), and so on.
 Please make sure that the input folder contains sufficient number of cases.
 If there are unused cases in the input folder, they will be deleted.
+
+Test packer will give incorrect order if the number of cases exceed 999, as it sorts the input filenames lexicographically,
+e.g. input1000.txt appears before input999.txt.
