@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os, sys
 
 num_files = int(raw_input().rstrip("\r\n").split(" ")[0])

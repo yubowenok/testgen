@@ -87,6 +87,22 @@ Source code will be compiled based on suffix file types. \*.cpp, \*.java and \*.
 The correct outputs will be at _output/\*_.
 For testing user's answers (to be compared against _output/\*_) will be at _answer/\*_.
 
+To generate cases in a specific order, possibly with alternating manual and program generated cases, can be achieved by
+modifying _aplusb\_gen.py_. This is particularly useful when the problem has multiple groups of inputs (subtasks), so
+that the tests need to be combined with specific ordering.
+```python
+gen.init()
+# small cases
+gen.manualCases('input_manual_small')
+rules = gen.parseRule('aplusb_small.genrule')
+gen.programCases(rules, aplusb_input)
+# large cases
+gen.manualCases('input_manual_large')
+rules = gen.parseRule('aplusb_large.genrule')
+gen.programCases(rules, aplusb_input)
+```
+
+
 ### Test Packer
 
 Test packer is a python script that combines the test cases in the input folder into files with multiple test cases.
@@ -110,3 +126,12 @@ If there are unused cases in the input folder, they will be deleted.
 
 Test packer will give incorrect order if the number of cases exceed 999, as it sorts the input filenames lexicographically,
 e.g. input1000.txt appears before input999.txt.
+
+### Everything together
+
+The _all_ script completes everything in a single step: generate the inputs, pack the tests into groups, and run the solution
+and produce the outputs.
+```bash
+./all aplusb sol.cpp
+```
+

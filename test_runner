@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # $1: "run" or "test"
 # $2: source filename
 
@@ -11,13 +13,22 @@ if [[ $2 == "" ]]; then
   exit
 fi
 
+os=`uname`
+case $os in
+  'WindowsNT') os='win';;
+  *) os='';;
+esac
 
 name=`echo $2 | cut -d'.' -f 1`
 suffix=`echo $2 | cut -d'.' -f 2`
 runcmd=""
 
 if [[ $suffix == "cpp" ]]; then
-  g++ -Wl,--stack,100000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+  if [[ $os == 'win' ]]; then
+    g++ -Wl,--stack,100000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+  else
+    g++ -Wl,-stack_size,0x10000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+  fi
   runcmd="./$name"
 elif [[ $suffix == "java" ]]; then
   # java class name must be the same as the file name

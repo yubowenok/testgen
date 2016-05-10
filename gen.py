@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys, os
 
 splitLine = "===================="
@@ -88,6 +89,8 @@ def manualCases(directory):
   # copy all the manual tests
   for dirname, dirnames, filenames in os.walk(directory):
     for filename in filenames:
+      if filename[0] == '.': # skip hidden files
+        continue
       with open(directory + "/" + filename, "r") as f:
         for line in f:
           line = line.rstrip()
