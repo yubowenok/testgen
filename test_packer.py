@@ -24,6 +24,8 @@ def getNextTmpFilename():
 for dirname, dirnames, filenames in os.walk("input"):
   global failed
   filenames = sorted(filenames)
+  while len(filenames) > 0 and filenames[0][0] == ".":
+    filenames = filenames[1:]
   counter = 0
   for file_sizes_i in range(len(file_sizes)):
     new_filepath = os.path.join(dirname, getNextTmpFilename())
