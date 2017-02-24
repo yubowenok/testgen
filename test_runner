@@ -30,8 +30,7 @@ if [[ $suffix == "cpp" ]]; then
   elif [[ $os == 'mac' ]]; then
     g++ -Wl,-stack_size,0x10000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
   else
-    # stack size set by "ulimit -s"
-    g++ $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+    g++ -fstack-limit-symbol=__stack_limit -Wl,--defsym,__stack_limit=0x10000000 -fstack-check $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
   fi
   runcmd="./$name"
 elif [[ $suffix == "java" ]]; then
