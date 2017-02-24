@@ -13,9 +13,10 @@ if [[ $2 == "" ]]; then
   exit
 fi
 
-os=`uname`
+os=`uname | tr '[:upper:]' '[:lower:]'` 
 case $os in
-  'WindowsNT') os='win';;
+  'windowsnt') os='win';;
+  'darwin') os='mac';;
   *) os='';;
 esac
 
@@ -26,8 +27,11 @@ runcmd=""
 if [[ $suffix == "cpp" ]]; then
   if [[ $os == 'win' ]]; then
     g++ -Wl,--stack,100000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
-  else
+  elif [[ $os == 'mac' ]]; then
     g++ -Wl,-stack_size,0x10000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
+  else
+    # stack size set by "ulimit -s"
+    g++ $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
   fi
   runcmd="./$name"
 elif [[ $suffix == "java" ]]; then
