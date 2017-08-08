@@ -1,0 +1,11 @@
+# Create test cases following the generation rule specification format.
+# Each group calls a particular func with given parameters.
+
+group = DummyRandom
+  func = dummyRandom
+  num = 4
+  param
+    max_random = 100
+    max_random = 1000000
+    ...
+end

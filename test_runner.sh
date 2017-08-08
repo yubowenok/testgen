@@ -74,7 +74,9 @@ for i in input/*; do
   	fi
 	else
 	  # generate AC outputs for all cases
-	  $runcmd < $i > ${i//input/output}
+	  ansfile=${i//input/output}
+	  ansfile=${ansfile//.in/.ans}
+	  $runcmd < $i > $ansfile
 	  echo "DONE"
 	fi
 done

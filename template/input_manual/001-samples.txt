@@ -1,0 +1,4 @@
+42
+==================== sample case 1
+0
+==================== name:zero another sample case
