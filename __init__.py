@@ -1,3 +1,5 @@
-from util import formatCaseNumber
-from gen import *
-from problem import Problem
+__all__ = ['util', 'parse', 'problem']
+
+from testgen.util import formatCaseNumber
+from testgen.parse import *
+from testgen.problem import Problem
