@@ -35,6 +35,7 @@ if [[ $suffix == "cpp" ]]; then
   runcmd="./$name"
 elif [[ $suffix == "java" ]]; then
   # java class name must be the same as the file name
+  javac $2
   runcmd="java $name"
 elif [[ $suffix == "py" ]]; then
   runcmd="python $2"

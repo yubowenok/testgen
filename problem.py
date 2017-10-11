@@ -24,7 +24,7 @@ class Problem:
     filename = fullCasePath(self.cur_case_name)
     self.cur_case_file = open(filename, 'w')
     
-  def closeCase(self, name=None, groupNum=None):
+  def closeCase(self, name=None, group_num=None):
     if self.cur_case_file is None:
       raise Exception('no case was open, but split line was found to close')
     self.cur_case_file.close()
@@ -33,8 +33,8 @@ class Problem:
     new_case_name = self.cur_case_name
     if name != None:
       new_case_name += '-' + name
-    if groupNum != None:
-      new_case_name += '-%s' % formatGroupNumber(groupNum)
+    if group_num != None:
+      new_case_name += '-%s' % formatGroupNumber(group_num)
       
     if new_case_name != self.cur_case_name:
       os.rename(fullCasePath(self.cur_case_name), fullCasePath(new_case_name))
@@ -79,7 +79,7 @@ class Problem:
         self.newCase()
         self.cur_case_file.write(res)
         group_num += 1
-        self.closeCase(name=rule['name'], groupNum=group_num)
+        self.closeCase(name=rule['name'], group_num=group_num if num > 1 else None)
 
   def packCases(self, group_file):
     groups = parseGroups(group_file)
@@ -102,7 +102,8 @@ class Problem:
       filenames = [filename for filename in sorted(filenames) if not isHiddenFile(filename)]
       counter = 0
       for group_index, group in enumerate(groups):
-        new_filepath = os.path.join(dirname, getNextTmpFilename(group_index + 1, name=group['name'] if 'name' in group else None))
+        new_filepath = os.path.join(dirname, 
+            getNextTmpFilename(group_index + 1, name=group['name'] if 'name' in group else None))
         out_file = open(new_filepath, 'w')
         contents = ''
         for i in range(counter, counter + group['file_count']):
