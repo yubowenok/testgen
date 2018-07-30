@@ -45,7 +45,7 @@ class Problem:
   def manualCases(self, directory):    
     # copy all the manual tests
     for dirname, dirnames, filenames in os.walk(directory):
-      for filename in filenames:
+      for filename in sorted(filenames):
         if isHiddenFile(filename): # skip hidden files
           continue
         with open(directory + '/' + filename, 'r') as f:
