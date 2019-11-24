@@ -1,17 +1,26 @@
 ## Test generator for algorithm problems
 
+### Getting Started
 
+Download (clone) the testgen package. Make sure it is in sys.path.
+The _create_problem.sh_ script inside testgen may help you get started quickly. Use
+```bash
+./create_problem.sh {problem_id}
+```
+to initialize a problem with given id using the default template.
+The script will initialize the files mentioned in the tutorial below, and you can just fill in their content.
 
-### Test Generator and Runner
+### Test Generator Tutorial
 
-Here we show how to create test cases for a simple problem "A + B" that asks for the sum of two integers:
-
-* Make a directory for the problem, say _aplusb_
-* Download (clone) the testgen package. Make sure it is in sys.path.
+Here we show how to create test cases for a simple problem "A + B" that asks for the sum of two integers.
+```bash
+./create_problem.sh aplusb
+```
+This creates a directory for the problem, i.e. _aplusb_.
 We will be under _aplusb/_ in all the following steps.
-* Create a folder for manual test cases, say _input\_manual_.
-Add manual test case files to _input\_manual_.
-Each file may contain arbitrary number of test cases, separated by a line with 20 equal signs, e.g.:
+
+Inside the folder _input\_manual_, we can place all the manually created test cases.
+Each file inside this folder may contain an arbitrary number of test cases, separated by a line with 20 equal signs, e.g.:
 ```
 3 5
 ==================== case 3+5 (you can put any comments here)
@@ -19,8 +28,10 @@ Each file may contain arbitrary number of test cases, separated by a line with 2
 ==================== name:Sample-2 (you may specifically name the test file)
 1 -1
 ```
-* Write the test generator python scripts. 
-The scripts shall have an entry file _gen.py_, which may follow the templates:
+
+The test generator python script _gen.py_ create create a Problem instance ``prob``, and call ``prob.manualCases('input_manual')`` to create one case for each test case you specify in the ``input_manual`` folder.
+
+Here is a snippet of what happens in _gen.py_.
 ```python
 import sys
 
@@ -40,7 +51,10 @@ prob.manualCases('input_manual')
 # and generate tests via program using the rules
 prob.programCases('aplusb.rules', funcs)
 ```
-* _funcs.py_ shall define several ways to generate tests programmatically, like:
+
+To create programmatic cases, you need to write some functions in _funcs.py_.
+Each function in _funcs.py_ defines one way to generate a group of tests, like:
+
 ```python
 import random
 
@@ -56,7 +70,9 @@ def twoRandomIntegers(args):
   return str(a) + " " + str(b) + "\n"
 ```
 
-* Write a generator rule file _aplusb.rules_. Rules file has simple syntax as follows:
+We write a generator rule file to tell testgen how to call those functions.
+Fill in the generator rule file _aplusb.rules_.
+Rules file has a simple syntax as follows:
 ```
 group = MinusOne
   func = xMinusOne
@@ -85,23 +101,28 @@ In the above example, the last 4 cases for group "TwoRandom" all use parameters 
 Note that rule files are space insensitive.
 All spaces are ignored when a rule file gets parsed.
 
-* Run the test generator
+Lastly, we need to create a solution.
+Let's write a solver for the problem, say _sol.cpp_.
+Source code will be compiled based on suffix file types. \*.cpp, \*.java and \*.py files are supported.
+The solver will be used to generate the judge's output files.
+
+Finally we can run the test generator:
 ```
 python gen.py
 ```
+
 This shall create a folder named _input_ and put all cases there, one case per file.
 The files are named _000.in_, _001.in_, and so on.
 If there is a name set for a test case, it will be appended to the file name, e.g. _001-sample-1.in_.
 Group names are automatically appended with its own counter, e.g. _008-MinusOne-1.in_.
 
-* Write a solver for the problem, say _sol.cpp_
-* Use _test\_runner.sh_ to generate the correct outputs for all the test cases, or test a solution
-```
+The corresponding answer files can be found in the _output_ folder, such as _001-sample-1.ans_, _008-MinusOne-1.ans_, and so on.
+
+Internally, the _gen.py_ script calls the _test\_runner.sh_ script to generate those answer files, you can also manually invoke this shell script to generate outputs, or to test a solution:
+```bash
 ./test_runner.sh {run|test} sol.cpp
 ```
-Source code will be compiled based on suffix file types. \*.cpp, \*.java and \*.py files are supported.
-The correct outputs will be at _output/\*_.
-For testing user's answers (to be compared against _output/\*_) will be at _answer/\*_.
+If you are testing a solution, the solution's answers will be written to _answer/\*_.
 
 To generate cases in a specific order, possibly with alternating manual and program generated cases, can be achieved by
 modifying _gen.py_. This is particularly useful when the problem has multiple groups of inputs (subtasks), so
@@ -116,9 +137,12 @@ prob.programCases('aplusb_large.rules', funcs)
 ```
 
 
-### Test Packer
+### Test Packer (Optional)
 
-You can use test packer to combine the test cases in the input folder into files with multiple test cases.
+Typically, each test file has exactly one test case, and you do not need to use the test packer.
+However for some judging environment you must have one test file containing multiple test cases.
+In this case, you can use the procedure described above to generate one-test-per-file test cases, and finally use the test packer to combine them into a smaller number of files.
+
 Each new case file will include multiple cases, prepending the number of cases at its beginning.
 You need to write a group specification file (_aplusb.groups_) with the following format
 ```
@@ -142,14 +166,3 @@ Test packer will give incorrect order if the number of cases exceed 999, as it s
 e.g. _1000.in_ appears before _999.in_.
 It is not recommended to create more than 1000 cases.
 If you have a problem that has a large number of cases, consider them to be multiple queries in one single case.
-
-
-
-### Getting Started
-
-The _create_problem.sh_ script may help you get started quickly. Use
-```bash
-./create_problem.sh {problem_id}
-```
-to initialize a problem with given id using the default template.
-The files mentioned above will be initialized for you and you can just fill in their content.
