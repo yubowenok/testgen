@@ -15,3 +15,4 @@ def formatGroupNumber(x):
   
 def isHiddenFile(filename):
   return re.match('^\.', filename) != None
+

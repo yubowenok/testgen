@@ -20,11 +20,10 @@ case $os in
   *) os='';;
 esac
 
-name=`echo $2 | cut -d'.' -f 1`
-suffix=`echo $2 | cut -d'.' -f 2`
+name="${2%.*}"
 runcmd=""
 
-if [[ $suffix == "cpp" ]]; then
+if [[ $2 == *.cpp ]]; then
   if [[ $os == 'win' ]]; then
     g++ -Wl,--stack,100000000 $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
   elif [[ $os == 'mac' ]]; then
@@ -33,14 +32,14 @@ if [[ $suffix == "cpp" ]]; then
     g++ -fstack-limit-symbol=__stack_limit -Wl,--defsym,__stack_limit=0x10000000 -fstack-check $2 -o $name -O2 -Wall -Wextra -std=gnu++0x || exit
   fi
   runcmd="./$name"
-elif [[ $suffix == "java" ]]; then
+elif [[ $2 == *java ]]; then
   # java class name must be the same as the file name
   javac $2
   runcmd="java $name"
-elif [[ $suffix == "py" ]]; then
+elif [[ $2 == *py ]]; then
   runcmd="python $2"
 else
-  echo "unknown source type: .$suffix"
+  echo "unknown source type: $2"
   exit
 fi
 

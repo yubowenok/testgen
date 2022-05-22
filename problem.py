@@ -1,8 +1,8 @@
 import os, sys, shutil
 from subprocess import call
 
-from util import formatCaseNumber, formatGroupNumber, fullCasePath, isHiddenFile
-from parse import parseSplitLine, parseRules, parseGroups
+from .util import formatCaseNumber, formatGroupNumber, fullCasePath, isHiddenFile
+from .parse import parseSplitLine, parseRules, parseGroups
 
 class Problem:
   def __init__(self, problem_id):
@@ -40,7 +40,7 @@ class Problem:
       os.rename(fullCasePath(self.cur_case_name), fullCasePath(new_case_name))
       self.cur_case_name = new_case_name
     
-    print 'Done case %s' % self.cur_case_name
+    print ('Done case %s' % self.cur_case_name)
  
   def manualCases(self, directory):    
     # copy all the manual tests
@@ -84,7 +84,7 @@ class Problem:
   def packCases(self, group_file):
     groups = parseGroups(group_file)
     if len(groups) == 0:
-      print >> sys.stderr, 'no case packing required'
+      print ('no case packing required', file=sys.stderr)
       return
     
     def getNextTmpFilename(file_number, name=None):
@@ -122,7 +122,7 @@ class Problem:
         counter += group['file_count']
       
       if counter < len(filenames):
-        print >> sys.stderr, 'Warning: not all input files were used'
+        print ('Warning: not all input files were used', file=sys.stderr)
   
     # delete all single-case input files
     for dirname, dirnames, filenames in os.walk('input'):
